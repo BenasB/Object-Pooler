@@ -114,20 +114,26 @@ public class ObjectPooler : MonoBehaviour {
     class PoolObject
     {
         Transform objectTransform;
-        Vector3 startScale;
+
+        bool isPoolable;
+        IPoolable poolable;
 
         public PoolObject(Transform spawnedObject)
         {
             objectTransform = spawnedObject;
-            startScale = spawnedObject.localScale;
+
+            poolable = objectTransform.GetComponent<IPoolable>();
+            if (poolable != null)
+                isPoolable = true;
         }
 
         /// <summary>
-        /// Resets and object to its original state for reusability
+        /// Resets the object for reusability
         /// </summary>
         public void ResetObject()
         {
-            objectTransform.localScale = startScale;
+            if (isPoolable)
+                poolable.ResetPoolObject();
         }
 
         /// <summary>
