@@ -5,6 +5,7 @@ Features (For now):
 * Create Pool
 * Expand Pool
 * Reuse Object
+* Check if a pool exists
 
 When reusing the object you can implement the IPoolable interface and specify what needs to be reset in ResetPoolObject() method. For example this will set the scale to Vector3.one (1,1,1):
 
