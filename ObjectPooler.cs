@@ -109,6 +109,16 @@ public class ObjectPooler : MonoBehaviour {
     }
 
     /// <summary>
+    /// Checks if a pool is present
+    /// </summary>
+    public bool PoolExists(Transform prefab)
+    {
+        int key = prefab.GetInstanceID();
+
+        return dictionary.ContainsKey(key);
+    }
+
+    /// <summary>
     /// Keeps an object and handles it's resetting
     /// </summary>
     class PoolObject
