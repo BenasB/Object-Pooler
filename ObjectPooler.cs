@@ -20,7 +20,6 @@ public class ObjectPooler : MonoBehaviour {
     /// </summary>
     public Transform ReuseObject(Transform prefab, Vector2 position, Quaternion rotation)
     {
-        // Get the key
         int key = prefab.GetInstanceID();
 
         if (!dictionary.ContainsKey(key))
@@ -29,13 +28,10 @@ public class ObjectPooler : MonoBehaviour {
             return null;
         }
 
-        // Dequeue the object from the start
         PoolObject objectToReuse = dictionary[key].Dequeue();
 
-        // Enqueue the object to the back
         dictionary[key].Enqueue(objectToReuse);
 
-        // Reset the object to its original state
         objectToReuse.ResetObject();
 
         // Set position and rotation
@@ -49,33 +45,27 @@ public class ObjectPooler : MonoBehaviour {
     /// </summary>
     public void CreatePool (Transform prefab, int size)
     {
-        // Get the key
         int key = prefab.GetInstanceID();
 
-        // Check if a pool with that key already exists
         if (dictionary.ContainsKey(key))
         {
             Debug.LogError("Trying to create a pool with a key that already exists in the dictionary");
             return;
         }
 
-        // Create a new queue
         Queue<PoolObject> pool = new Queue<PoolObject>();
 
         // Populate the queue
         for (int i = 0; i < size; i++)
         {
-            // Spawn a new object
             Transform spawnedObject = Instantiate(prefab, transform);
 
-            // Disable the object
             spawnedObject.gameObject.SetActive(false);
 
-            // Add the object to the queue
             pool.Enqueue(new PoolObject(spawnedObject));
         }
 
-        // Add the queue to the dictionary
+        // Add the new queue to the dictionary
         dictionary.Add(key, pool);
     }
 
@@ -84,10 +74,8 @@ public class ObjectPooler : MonoBehaviour {
     /// </summary>
     public void ExpandPool (Transform prefab, int size)
     {
-        // Get the key
         int key = prefab.GetInstanceID();
 
-        // Check if a value exists with the given key
         if (!dictionary.ContainsKey(key))
         {
             Debug.LogError("Trying to expand a pool with a key that doesn't exist");
@@ -97,13 +85,10 @@ public class ObjectPooler : MonoBehaviour {
         // Add more objects to the queue
         for (int i = 0; i < size; i++)
         {
-            // Spawn a new object
             Transform spawnedObject = Instantiate(prefab, transform);
 
-            // Disable the object
             spawnedObject.gameObject.SetActive(false);
 
-            // Add the new object to the queue
             dictionary[key].Enqueue(new PoolObject(spawnedObject));
         }
     }
